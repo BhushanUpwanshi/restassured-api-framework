@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Cucumber scenarios. mvn test -pl api-tests -Dsuite=bdd -->
+<suite name="bdd">
+  <test name="bdd">
+    <classes>
+      <class name="io.github.bhushanupwanshi.api.tests.bdd.runners.CucumberTestNgRunner"/>
+    </classes>
+  </test>
+</suite>

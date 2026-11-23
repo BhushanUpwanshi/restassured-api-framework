@@ -1,0 +1,19 @@
+{
+  "dataset": "booking-crud",
+  "cases": [
+    {
+      "id": "BC-QA-01",
+      "description": "stores a standard booking with deposit and breakfast",
+      "tags": ["positive", "smoke"],
+      "request": { "firstname": "QA", "lastname": "Standard", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" }, "additionalneeds": "Breakfast" },
+      "expect": { "status": 200, "schema": "schemas/created-booking.schema.json", "maxResponseTimeMs": 8000 }
+    },
+    {
+      "id": "BC-QA-02",
+      "description": "stores a corporate rate booking with no deposit",
+      "tags": ["positive"],
+      "request": { "firstname": "QA", "lastname": "Corporate", "totalprice": 4200, "depositpaid": false, "bookingdates": { "checkin": "2027-01-10", "checkout": "2027-01-17" }, "additionalneeds": "Airport pickup" },
+      "expect": { "status": 200, "schema": "schemas/created-booking.schema.json", "maxResponseTimeMs": 8000 }
+    }
+  ]
+}

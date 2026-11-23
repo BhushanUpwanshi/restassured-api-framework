@@ -1,0 +1,24 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  Regression: every TestNG test, in parallel. Cucumber has its own suite (bdd.xml).
+  mvn test -pl api-tests                 (default suite)
+  mvn test -pl api-tests -Pqa            (same code, qa datasets)
+
+  parallel="methods" is safe because tokens and the cleanup ledger are per thread.
+  data-provider-thread-count runs dataset rows in parallel too.
+-->
+<suite name="regression" parallel="methods" thread-count="4" data-provider-thread-count="4">
+  <test name="regression">
+    <groups>
+      <run>
+        <include name="regression"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="io.github.bhushanupwanshi.api.tests.auth"/>
+      <package name="io.github.bhushanupwanshi.api.tests.booking"/>
+      <package name="io.github.bhushanupwanshi.api.tests.data"/>
+      <package name="io.github.bhushanupwanshi.api.tests.arch"/>
+    </packages>
+  </test>
+</suite>

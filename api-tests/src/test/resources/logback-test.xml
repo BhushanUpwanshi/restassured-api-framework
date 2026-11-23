@@ -1,0 +1,15 @@
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{24} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- One line per HTTP call at DEBUG; bodies go to the Allure report, not the console. -->
+  <logger name="io.github.bhushanupwanshi.api" level="INFO"/>
+  <logger name="io.github.bhushanupwanshi.api.core.transport.HttpLogFilter" level="DEBUG"/>
+
+  <root level="WARN">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

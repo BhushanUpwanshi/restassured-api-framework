@@ -1,0 +1,6 @@
+**/target
+**/allure-results
+.git
+.idea
+.vscode
+*.iml

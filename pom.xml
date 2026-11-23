@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.bhushanupwanshi</groupId>
+  <artifactId>restassured-api-framework</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>restassured-api-framework</name>
+  <description>
+    API automation framework. api-core is a reusable library with no test-framework
+    dependency; api-tests consumes it and supplies TestNG suites and Cucumber scenarios.
+  </description>
+
+  <modules>
+    <module>api-core</module>
+    <module>api-tests</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>17</maven.compiler.release>
+
+    <!--
+      Versions verified against Maven Central on 2026-10-05. Three artifacts have a
+      newer release that is deliberately not used because it is a pre-release:
+      WireMock 4.0.0-beta.39, AssertJ 4.0.0-M1, Surefire 3.6.0-M1.
+    -->
+    <restassured.version>5.5.2</restassured.version>
+    <jackson.version>2.19.0</jackson.version>
+    <assertj.version>3.27.7</assertj.version>
+    <datafaker.version>2.4.3</datafaker.version>
+    <logback.version>1.5.18</logback.version>
+    <allure.version>2.29.1</allure.version>
+    <testng.version>7.12.0</testng.version>
+    <cucumber.version>7.22.1</cucumber.version>
+    <wiremock.version>3.13.2</wiremock.version>
+    <archunit.version>1.4.1</archunit.version>
+
+    <surefire.plugin.version>3.5.6</surefire.plugin.version>
+    <jacoco.plugin.version>0.8.15</jacoco.plugin.version>
+    <spotless.plugin.version>3.10.3</spotless.plugin.version>
+    <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
+    <!-- 10.x, not 14.x: Checkstyle 11+ needs a Java 21 runtime and this build is on 17. -->
+    <checkstyle.version>10.26.1</checkstyle.version>
+
+    <!-- Overridden by the env profiles below. -->
+    <api.env>dev</api.env>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- BOMs first, so the projects that publish one govern their own module versions. -->
+      <dependency>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-bom</artifactId>
+        <version>${allure.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-bom</artifactId>
+        <version>${cucumber.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>${restassured.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>json-schema-validator</artifactId>
+        <version>${restassured.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.datafaker</groupId>
+        <artifactId>datafaker</artifactId>
+        <version>${datafaker.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>${testng.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wiremock</groupId>
+        <artifactId>wiremock</artifactId>
+        <version>${wiremock.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit</artifactId>
+        <version>${archunit.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${surefire.plugin.version}</version>
+          <configuration>
+            <systemPropertyVariables>
+              <!-- Carries the active Maven profile into the JVM the tests run in. -->
+              <api.env>${api.env}</api.env>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${checkstyle.plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <!--
+      Quality gates, bound to verify so "it builds" means something.
+      spotless: formatting hygiene (imports, whitespace, final newline) on both modules.
+        Deliberately not a whole-file reformatter: the code is hand-wrapped for reading,
+        and a formatter that rewrites every line on first run buries real diffs.
+      checkstyle: the rules in config/checkstyle.xml; any violation fails the build.
+      jacoco: line-coverage floor on api-core, configured in that module.
+    -->
+    <plugins>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <java>
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+            </includes>
+            <removeUnusedImports/>
+            <importOrder>
+              <order>\#,</order>
+            </importOrder>
+            <trimTrailingWhitespace/>
+            <endWithNewline/>
+            <indent>
+              <spaces>true</spaces>
+              <spacesPerTab>4</spacesPerTab>
+            </indent>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <goals><goal>check</goal></goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>${maven.multiModuleProjectDirectory}/config/checkstyle.xml</configLocation>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <consoleOutput>true</consoleOutput>
+          <failOnViolation>true</failOnViolation>
+          <violationSeverity>warning</violationSeverity>
+        </configuration>
+        <executions>
+          <execution>
+            <goals><goal>check</goal></goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation><activeByDefault>true</activeByDefault></activation>
+      <properties><api.env>dev</api.env></properties>
+    </profile>
+    <profile>
+      <id>qa</id>
+      <properties><api.env>qa</api.env></properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties><api.env>prod</api.env></properties>
+    </profile>
+  </profiles>
+
+</project>

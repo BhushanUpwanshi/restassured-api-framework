@@ -1,0 +1,132 @@
+{
+  "dataset": "booking-validation",
+  "cases": [
+    {
+      "id": "BV-01",
+      "description": "rejects a booking with no firstname",
+      "tags": ["negative", "missing-field"],
+      "request": { "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 500, "bodyContains": "Internal Server Error", "maxResponseTimeMs": 5000 }
+    },
+    {
+      "id": "BV-02",
+      "description": "rejects a booking whose firstname is null",
+      "tags": ["negative", "null-field"],
+      "request": { "firstname": null, "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 500, "bodyContains": "Internal Server Error" }
+    },
+    {
+      "id": "BV-03",
+      "description": "rejects a booking whose firstname is a number",
+      "tags": ["negative", "wrong-type"],
+      "request": { "firstname": 123, "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-04",
+      "description": "rejects a booking with no lastname",
+      "tags": ["negative", "missing-field"],
+      "request": { "firstname": "Asha", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-05",
+      "description": "rejects a booking with no totalprice",
+      "tags": ["negative", "missing-field"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-06",
+      "description": "rejects a booking with no depositpaid",
+      "tags": ["negative", "missing-field"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-07",
+      "description": "rejects a booking with no bookingdates",
+      "tags": ["negative", "missing-field"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true },
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-08",
+      "description": "rejects a booking with no checkin date",
+      "tags": ["negative", "missing-field"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkout": "2026-12-05" } },
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-09",
+      "description": "rejects an empty object",
+      "tags": ["negative"],
+      "request": {},
+      "expect": { "status": 500 }
+    },
+    {
+      "id": "BV-10",
+      "description": "accepts a booking without additionalneeds, which is optional",
+      "tags": ["positive", "optional-field"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.firstname": "Asha", "booking.totalprice": 150 } }
+    },
+    {
+      "id": "BV-11",
+      "description": "KNOWN DEFECT: accepts a text totalprice and stores it as null",
+      "tags": ["known-defect", "wrong-type"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": "abc", "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.totalprice": null } }
+    },
+    {
+      "id": "BV-12",
+      "description": "KNOWN DEFECT: accepts a negative totalprice",
+      "tags": ["known-defect", "boundary"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": -5, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.totalprice": -5 } }
+    },
+    {
+      "id": "BV-13",
+      "description": "KNOWN DEFECT: truncates a decimal totalprice instead of rejecting it",
+      "tags": ["known-defect", "boundary"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 10.5, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.totalprice": 10 } }
+    },
+    {
+      "id": "BV-14",
+      "description": "KNOWN DEFECT: accepts a checkout date before the checkin date",
+      "tags": ["known-defect", "dates"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-09", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.bookingdates.checkin": "2026-12-09", "booking.bookingdates.checkout": "2026-12-05" } }
+    },
+    {
+      "id": "BV-15",
+      "description": "KNOWN DEFECT: accepts an unparseable checkin and stores 0NaN-aN-aN",
+      "tags": ["known-defect", "dates"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "notadate", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.bookingdates.checkin": "0NaN-aN-aN" } }
+    },
+    {
+      "id": "BV-16",
+      "description": "KNOWN DEFECT: coerces depositpaid \"yes\" to true",
+      "tags": ["known-defect", "wrong-type"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": "yes", "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.depositpaid": true } }
+    },
+    {
+      "id": "BV-17",
+      "description": "KNOWN DEFECT: accepts an empty firstname",
+      "tags": ["known-defect", "boundary"],
+      "environments": ["dev", "qa"],
+      "request": { "firstname": "", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" } },
+      "expect": { "status": 200, "fields": { "booking.firstname": "" } }
+    },
+    {
+      "id": "BV-18",
+      "description": "drops an unknown field silently and stores the rest",
+      "tags": ["positive", "extra-field"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" }, "vip": true },
+      "expect": { "status": 200, "fields": { "booking.vip": "<absent>", "booking.firstname": "Asha" } }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Normalise line endings to LF in the repository. Development is on Windows and CI
+# runs on Ubuntu; without this, every file touched on Windows diffs as rewritten.
+* text=auto eol=lf
+
+*.jar binary
+*.png binary
+*.zip binary

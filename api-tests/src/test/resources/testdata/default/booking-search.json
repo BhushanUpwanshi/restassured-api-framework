@@ -1,0 +1,37 @@
+{
+  "dataset": "booking-search",
+  "cases": [
+    {
+      "id": "BS-01",
+      "description": "finds a booking by firstname",
+      "tags": ["positive"],
+      "seed": { "firstname": "Srch-${uid}", "lastname": "One", "totalprice": 100, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-03" } },
+      "query": { "firstname": "Srch-${uid}" },
+      "expectSeed": true
+    },
+    {
+      "id": "BS-02",
+      "description": "finds a booking by firstname and lastname together",
+      "tags": ["positive"],
+      "seed": { "firstname": "Srch-${uid}", "lastname": "Two-${uid}", "totalprice": 100, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-03" } },
+      "query": { "firstname": "Srch-${uid}", "lastname": "Two-${uid}" },
+      "expectSeed": true
+    },
+    {
+      "id": "BS-03",
+      "description": "does not match when the lastname filter disagrees",
+      "tags": ["negative"],
+      "seed": { "firstname": "Srch-${uid}", "lastname": "Three", "totalprice": 100, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-03" } },
+      "query": { "firstname": "Srch-${uid}", "lastname": "Someone-Else" },
+      "expectSeed": false,
+      "expectEmpty": true
+    },
+    {
+      "id": "BS-04",
+      "description": "returns an empty list, not 404, when nothing matches",
+      "tags": ["negative"],
+      "query": { "firstname": "Nobody-${uid}" },
+      "expectEmpty": true
+    }
+  ]
+}

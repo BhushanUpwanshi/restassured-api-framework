@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  Smoke: the hermetic checks plus one pass over each live endpoint.
+  mvn test -pl api-tests -Dsuite=smoke
+-->
+<suite name="smoke" parallel="methods" thread-count="4" data-provider-thread-count="4">
+  <test name="smoke">
+    <groups>
+      <run>
+        <include name="smoke"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="io.github.bhushanupwanshi.api.tests.*"/>
+    </packages>
+  </test>
+</suite>

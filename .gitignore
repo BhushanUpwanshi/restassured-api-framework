@@ -1,0 +1,19 @@
+target/
+
+# Reports and artifacts
+allure-results/
+allure-report/
+.allure/
+*.log
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+.DS_Store

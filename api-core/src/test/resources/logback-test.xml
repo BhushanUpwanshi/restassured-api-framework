@@ -1,0 +1,19 @@
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{24} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- The framework's own logs, at the level that makes a failure explicable. -->
+  <logger name="io.github.bhushanupwanshi.api" level="DEBUG"/>
+
+  <!-- WireMock and Jetty are loud and say nothing useful about a test failure. -->
+  <logger name="com.github.tomakehurst" level="WARN"/>
+  <logger name="org.eclipse.jetty" level="WARN"/>
+  <logger name="wiremock" level="WARN"/>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

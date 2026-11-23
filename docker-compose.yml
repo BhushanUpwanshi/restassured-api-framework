@@ -1,0 +1,8 @@
+# docker compose run --rm tests
+#   Framework unit tests, ArchUnit layer rules, coverage floor and static checks,
+#   all offline. Reports land in ./api-core/target on the host.
+services:
+  tests:
+    build: .
+    volumes:
+      - ./api-core/target:/workspace/api-core/target

@@ -1,0 +1,40 @@
+{
+  "dataset": "booking-crud",
+  "cases": [
+    {
+      "id": "BC-01",
+      "description": "stores a standard booking with deposit and breakfast",
+      "tags": ["positive", "smoke"],
+      "request": { "firstname": "Asha", "lastname": "Rao", "totalprice": 150, "depositpaid": true, "bookingdates": { "checkin": "2026-12-01", "checkout": "2026-12-05" }, "additionalneeds": "Breakfast" },
+      "expect": { "status": 200, "schema": "schemas/created-booking.schema.json", "maxResponseTimeMs": 5000 }
+    },
+    {
+      "id": "BC-02",
+      "description": "stores a booking with no deposit",
+      "tags": ["positive"],
+      "request": { "firstname": "Vikram", "lastname": "Iyer", "totalprice": 999, "depositpaid": false, "bookingdates": { "checkin": "2027-01-10", "checkout": "2027-01-11" }, "additionalneeds": "Late checkout" },
+      "expect": { "status": 200, "schema": "schemas/created-booking.schema.json" }
+    },
+    {
+      "id": "BC-03",
+      "description": "stores a zero-price booking",
+      "tags": ["positive", "boundary"],
+      "request": { "firstname": "Meera", "lastname": "Nair", "totalprice": 0, "depositpaid": false, "bookingdates": { "checkin": "2027-02-01", "checkout": "2027-02-02" } },
+      "expect": { "status": 200 }
+    },
+    {
+      "id": "BC-04",
+      "description": "stores a long stay of a full year",
+      "tags": ["positive", "boundary"],
+      "request": { "firstname": "Kabir", "lastname": "Shah", "totalprice": 36500, "depositpaid": true, "bookingdates": { "checkin": "2027-01-01", "checkout": "2028-01-01" }, "additionalneeds": "Dinner" },
+      "expect": { "status": 200 }
+    },
+    {
+      "id": "BC-05",
+      "description": "stores non-ASCII names unchanged",
+      "tags": ["positive", "encoding"],
+      "request": { "firstname": "Zoë", "lastname": "Núñez", "totalprice": 120, "depositpaid": true, "bookingdates": { "checkin": "2027-03-01", "checkout": "2027-03-04" } },
+      "expect": { "status": 200 }
+    }
+  ]
+}
